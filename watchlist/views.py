@@ -54,7 +54,7 @@ class StreamPlatformDetailAV(APIView):
 
 class WatchListAPIView(APIView):
     permission_classes = [IsAdminOrReadOnly]
-    
+
     def get(self, request):
         watchlist = WatchList.objects.all()
         watchlist_serializer = WatchListSerializer(watchlist, many=True)
@@ -68,3 +68,30 @@ class WatchListAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+        
+
+class WatchDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
+    def get(self, request, pk):
+        try:
+            movie = WatchList.objects.get(pk=pk)
+        except WatchList.DoesNotExist:
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = WatchListSerializer(movie)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        movie = WatchList.objects.get(pk=pk)
+        serializer = WatchListSerializer(movie, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        movie = WatchList.objects.get(pk=pk)
+        movie.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
