@@ -1,5 +1,5 @@
 # IMDB_API_Clone
-This is an IMDB API clone built using django rest framework which utilizes the concepts of generic views and API views and using django rest framework token authentication system.
+This is an IMDB API clone built using django rest framework which utilizes the concepts of generic views and API views and uses django rest framework token authentication system.
 
 
 ## Project Setup
@@ -14,6 +14,18 @@ This is an IMDB API clone built using django rest framework which utilizes the c
 
 ## Unit Tests:
 To run the unit tests you can use command `python manage.py test`.
+
+
+## virtual environment in python
+*(Note: Strictly for Linux users, for others commands may vary slightly.)*
+
+Browse to the directory where you want to setup your virtual environment then enter the command below:
+
+`python -m venv <virtualenvironment_name>`
+
+To activate the virtual environment:
+
+`source <virtualenvironment_name>/bin/activate`
 
 
 
