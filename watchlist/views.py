@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import WatchList, StreamPlatform
+from .permissions import IsAdminOrReadOnly
 from .serializers import WatchListSerializer, StreamPlatformSerializer
 
 
 class StreamPlatformAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         platform = StreamPlatform.objects.all()
@@ -24,6 +26,7 @@ class StreamPlatformAV(APIView):
         
 
 class StreamPlatformDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, pk):
         try:
@@ -50,6 +53,7 @@ class StreamPlatformDetailAV(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class WatchListAPIView(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         watchlist = WatchList.objects.all()
@@ -66,22 +70,21 @@ class WatchListAPIView(APIView):
             return Response(serializer.errors)
         
 
-
-class StreamPlatformDetailAV(APIView):
+class WatchDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, pk):
         try:
-            platform = StreamPlatform.objects.get(pk=pk)
-        except StreamPlatform.DoesNotExist:
+            movie = WatchList.objects.get(pk=pk)
+        except WatchList.DoesNotExist:
             return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = StreamPlatformSerializer(
-            platform, context={'request': request})
+        serializer = WatchListSerializer(movie)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        platform = StreamPlatform.objects.get(pk=pk)
-        serializer = StreamPlatformSerializer(platform, data=request.data)
+        movie = WatchList.objects.get(pk=pk)
+        serializer = WatchListSerializer(movie, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -89,6 +92,6 @@ class StreamPlatformDetailAV(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        platform = StreamPlatform.objects.get(pk=pk)
-        platform.delete()
+        movie = WatchList.objects.get(pk=pk)
+        movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
