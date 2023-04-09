@@ -64,31 +64,3 @@ class WatchListAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
-        
-
-
-class StreamPlatformDetailAV(APIView):
-
-    def get(self, request, pk):
-        try:
-            platform = StreamPlatform.objects.get(pk=pk)
-        except StreamPlatform.DoesNotExist:
-            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = StreamPlatformSerializer(
-            platform, context={'request': request})
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        platform = StreamPlatform.objects.get(pk=pk)
-        serializer = StreamPlatformSerializer(platform, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        platform = StreamPlatform.objects.get(pk=pk)
-        platform.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
