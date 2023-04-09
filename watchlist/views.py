@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from .models import WatchList, StreamPlatform, Review
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from .serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 
 
@@ -136,3 +136,9 @@ class ReviewList(ListAPIView):
         pk = self.kwargs['pk']
         return Review.objects.filter(watchlist=pk)
 
+
+
+class ReviewDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsReviewUserOrReadOnly]
