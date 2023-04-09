@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import WatchList, StreamPlatform
+from .permissions import IsAdminOrReadOnly
 from .serializers import WatchListSerializer, StreamPlatformSerializer
 
 
 class StreamPlatformAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         platform = StreamPlatform.objects.all()
@@ -24,6 +26,7 @@ class StreamPlatformAV(APIView):
         
 
 class StreamPlatformDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, pk):
         try:
@@ -50,7 +53,8 @@ class StreamPlatformDetailAV(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class WatchListAPIView(APIView):
-
+    permission_classes = [IsAdminOrReadOnly]
+    
     def get(self, request):
         watchlist = WatchList.objects.all()
         watchlist_serializer = WatchListSerializer(watchlist, many=True)
